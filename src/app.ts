@@ -12,6 +12,8 @@ app.use(express.json());
 
 app.use(cors({
   origin: 'https://p-a-gym.netlify.app/', // or specify your frontend like 'http://localhost:5174'
+  methods: ['GET', 'POST'],
+  credentials: true,
 }));
 
 app.use('/api/auth' , authRoutes)
