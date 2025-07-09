@@ -52,8 +52,16 @@ export const loginUser = async(req:Request , res: Response) =>{
      process.env.JWT_SECRET!,
      {expiresIn: '24h'}
     );
+res
+  .cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // فقط در HTTPS در حالت production
+    sameSite: "lax", // یا "Strict" یا "None" بر اساس نیاز
+    maxAge: 1000 * 60 * 60 * 24 // یک روز
+  })
+  .status(200)
+  .json({ success: true, message: 'شما وارد شدید،خوش آمدید' });
 
-    res.status(200).json({success: true, message: 'شما وارد شدید،خوش آمدید' , token})
   } catch (error:any) {
     res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
   }

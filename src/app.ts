@@ -4,11 +4,13 @@ import dotenv from 'dotenv';
 import authRoutes from './api/auth/auth.routes'
 import cors from 'cors';
 import { TestModel } from './test';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
 const app = express(); //*********************** 
 app.use(express.json());
+app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:5000',
@@ -31,15 +33,7 @@ app.use(cors(corsOptions));
 
 app.use('/api/auth' , authRoutes); //*********************** 
 
-app.get('/test-db', async (req, res) => {
-  try {
-    const test = await new TestModel({ name: 'Railway Test' }).save();
-    res.json({ message: 'Saved!', test });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+
 
 connectDB();
 

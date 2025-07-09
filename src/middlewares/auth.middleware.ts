@@ -7,9 +7,9 @@ interface AuthenticatedRequest extends Request{
 }
 
 export const authenticateToken = async(req:AuthenticatedRequest , res:Response, next:NextFunction) =>{
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-
+    // const authHeader = req.headers.authorization;
+    // const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies?.token;
     if(!token){
         res.status(401).json({message:'Access token is missing or invalid' });
        return; 
