@@ -22,7 +22,6 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         console.log("❌ Database connection failed:", error);
-        process.exit(1);
     }
 });
 exports.connectDB = connectDB;
