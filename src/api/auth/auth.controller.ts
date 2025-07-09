@@ -38,13 +38,13 @@ export const loginUser = async(req:Request , res: Response) =>{
     const {phone , password} = req.body;
     const user = await User.findOne({phone});
     if(!user){
-      res.status(404).json({ message: "کاربر یافت نشد، لطفا ثبت نام کنید"})
+      res.status(404).json({success:false,  message: "کاربر یافت نشد، لطفا ثبت نام کنید"})
       return;
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if(!isPasswordCorrect){
-      res.status(401).json({ message: "نام کاربری یا رمزعبور اشتباه است"});
+      res.status(401).json({success:false, message: "نام کاربری یا رمزعبور اشتباه است"});
       return;
     }
     const token = jwt.sign(
@@ -52,8 +52,8 @@ export const loginUser = async(req:Request , res: Response) =>{
      process.env.JWT_SECRET!,
      {expiresIn: '24h'}
     );
-res
-  .cookie("token", token, {
+
+  res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // فقط در HTTPS در حالت production
     sameSite: "lax", // یا "Strict" یا "None" بر اساس نیاز
