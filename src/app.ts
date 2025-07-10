@@ -29,7 +29,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(cookieParser());
 
 app.use('/api/auth' , authRoutes); //*********************** 
 
