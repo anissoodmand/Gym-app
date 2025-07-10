@@ -56,7 +56,7 @@ export const loginUser = async(req:Request , res: Response) =>{
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // فقط در HTTPS در حالت production
-    sameSite: "lax", // یا "Strict" یا "None" بر اساس نیاز
+    sameSite: "none", // یا "Strict" یا "None" بر اساس نیاز
     maxAge: 1000 * 60 * 60 * 24 // یک روز
   })
   .status(200)
