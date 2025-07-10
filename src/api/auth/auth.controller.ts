@@ -61,6 +61,8 @@ export const loginUser = async(req:Request , res: Response) =>{
   })
   .status(200)
   .json({ success: true, message: 'شما وارد شدید،خوش آمدید' });
+  console.log("Set-Cookie header:", res.getHeader("Set-Cookie"));
+
 
   } catch (error:any) {
     res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
