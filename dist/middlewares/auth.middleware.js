@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticateToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
+    var _a;
+    const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
     if (!token) {
         res.status(401).json({ message: 'Access token is missing or invalid' });
         return;

@@ -48,16 +48,24 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { phone, password } = req.body;
         const user = yield user_model_1.default.findOne({ phone });
         if (!user) {
-            res.status(404).json({ message: "کاربر یافت نشد، لطفا ثبت نام کنید" });
+            res.status(404).json({ success: false, message: "کاربر یافت نشد، لطفا ثبت نام کنید" });
             return;
         }
         const isPasswordCorrect = yield bcrypt_1.default.compare(password, user.password);
         if (!isPasswordCorrect) {
-            res.status(401).json({ message: "نام کاربری یا رمزعبور اشتباه است" });
+            res.status(401).json({ success: false, message: "نام کاربری یا رمزعبور اشتباه است" });
             return;
         }
         const token = jsonwebtoken_1.default.sign({ id: user._id, phone: user.phone }, process.env.JWT_SECRET, { expiresIn: '24h' });
-        res.status(200).json({ success: true, message: 'شما وارد شدید،خوش آمدید', token });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
+            maxAge: 1000 * 60 * 60 * 24
+        });
+        console.log("Set-Cookie header:", res.getHeader("Set-Cookie"));
+        res.status(200)
+            .json({ success: true, message: "به پنل کاربری وارد شدید" });
     }
     catch (error) {
         res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
