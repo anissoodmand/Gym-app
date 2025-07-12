@@ -17,7 +17,7 @@ app.use((0, cookie_parser_1.default)());
 const allowedOrigins = [
     'http://localhost:5000',
     'http://localhost:5173',
-    'https://p-a-gym.netlify.app'
+    'https://local-gym-ahvaz.netlify.app/'
 ];
 const corsOptions = {
     origin: (origin, callback) => {
