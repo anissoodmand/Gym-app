@@ -18,7 +18,7 @@ export const getMe = async (req: AuthenticatedRequest, res: Response): Promise<v
       return
     }
 
-    res.status(200).json({ success: true, user });
+    res.status(200).json({ success: true, message: "  اطلاعات کاربر لاگین شده شامل موارد زیر می باشد:",  user });
   } catch (err: any) {
     res.status(500).json({ success: false, message: "خطای سرور", error: err.message });
   }
