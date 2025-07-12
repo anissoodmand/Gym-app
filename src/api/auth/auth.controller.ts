@@ -61,7 +61,7 @@ export const loginUser = async(req:Request , res: Response) =>{
   })
   console.log("Set-Cookie header:", res.getHeader("Set-Cookie"));
   res.status(200)
-  .json({ success: true, message: "به پنل کاربری وارد شدید" });
+  .json({ success: true, message: "شما وارد شدید ، خوش آمدید" });
  
 
 

@@ -1,7 +1,8 @@
 import express from 'express';
 import { connectDB } from './config/database';
 import dotenv from 'dotenv';
-import authRoutes from './api/auth/auth.routes'
+import authRoutes from './api/auth/auth.routes';
+import userRoutes from './api/user/user.routes';
 import cors from 'cors';
 import { TestModel } from './test';
 import cookieParser from 'cookie-parser';
@@ -29,10 +30,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(cookieParser());
+
 
 app.use('/api/auth' , authRoutes); //*********************** 
-
+app.use('/api/user' , userRoutes);
 
 
 connectDB();

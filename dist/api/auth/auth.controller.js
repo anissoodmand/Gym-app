@@ -65,7 +65,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         console.log("Set-Cookie header:", res.getHeader("Set-Cookie"));
         res.status(200)
-            .json({ success: true, message: "به پنل کاربری وارد شدید" });
+            .json({ success: true, message: "شما وارد شدید ، خوش آمدید" });
     }
     catch (error) {
         res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
