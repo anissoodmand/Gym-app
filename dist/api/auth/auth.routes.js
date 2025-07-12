@@ -10,4 +10,5 @@ router.post('/register', (req, res, next) => {
     (0, auth_controller_1.registerUser)(req, res).catch(next);
 });
 router.post('/login', auth_controller_1.loginUser);
+router.post('/logout', auth_controller_1.logoutUser);
 exports.default = router;

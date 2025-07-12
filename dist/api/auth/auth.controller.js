@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.registerUser = void 0;
+exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 const user_model_1 = __importDefault(require("../user/user.model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const zod_1 = require("zod");
@@ -72,3 +72,21 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.loginUser = loginUser;
+const logoutUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
+        });
+        res.status(200).json({
+            success: true, message: "با موفقیت خارج شدید"
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false, message: "خروج با مشکل مواجه شده است"
+        });
+    }
+});
+exports.logoutUser = logoutUser;
