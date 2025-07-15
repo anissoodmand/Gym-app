@@ -3,6 +3,7 @@ import { connectDB } from './config/database';
 import dotenv from 'dotenv';
 import authRoutes from './api/auth/auth.routes';
 import userRoutes from './api/user/user.routes';
+import classScheduleRoutes from './api/class/classSchedule.routes';
 import cors from 'cors';
 import { TestModel } from './test';
 import cookieParser from 'cookie-parser';
@@ -34,7 +35,7 @@ app.use(cors(corsOptions));
 
 app.use('/api/auth' , authRoutes); //*********************** 
 app.use('/api/user' , userRoutes);
-
+app.use('/api/class' ,classScheduleRoutes)
 
 connectDB();
 

@@ -8,6 +8,7 @@ const database_1 = require("./config/database");
 const dotenv_1 = __importDefault(require("dotenv"));
 const auth_routes_1 = __importDefault(require("./api/auth/auth.routes"));
 const user_routes_1 = __importDefault(require("./api/user/user.routes"));
+const classSchedule_routes_1 = __importDefault(require("./api/class/classSchedule.routes"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
@@ -33,6 +34,7 @@ const corsOptions = {
 app.use((0, cors_1.default)(corsOptions));
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/user', user_routes_1.default);
+app.use('/api/class', classSchedule_routes_1.default);
 (0, database_1.connectDB)();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 server running on port ${PORT}`));
