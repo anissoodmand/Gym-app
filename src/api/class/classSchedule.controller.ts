@@ -85,16 +85,24 @@ export const getClassInfoById = async(req:Request , res:Response) =>{
 
 export const updateClass = async(req:Request , res:Response) =>{
     try {
-        const {id} = req.params;
-        const deletedClass = await ClassSchedule.findByIdAndDelete(id);
-        if(!deleteClass){
-           res.status(404).json({success: false , message: "!کلاس مورد نظر یافت نشد"});
-            return  
-        }
-          res.status(200).json({success: true , message: " اطلاعات کلاس مورد نظر شما" });
-        return
-    } catch (error) {
+      const {id} = req.params;
+       
+        const MyUpdate = req.body;
         
+        const myClass = await ClassSchedule.findByIdAndUpdate(id , MyUpdate ,{
+            new: true,
+            runValidators: true
+        });
+
+        if(!myClass){
+            res.status(404).json({message: "class not found"})
+            return;
+        }
+        res.status(200).json({message: "class update successfully" , data: myClass})
+        return;
+    } catch (error) {
+         res.status(500).json({ success: false, message: '-خطای سرور' });
+         return
     }
 }
 
