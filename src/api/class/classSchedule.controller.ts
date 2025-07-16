@@ -9,7 +9,7 @@ const createClassScheduleSchema = z.object({
     category: z.string().min(1, 'دسته بندی الزامی است'),
     coach: z.string().min(1, 'شناسه مربی الزامی است'),
     days: z
-    .array(z.enum(['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri']))
+    .array(z.enum(['شنبه', 'یک شنبه', 'دو شنبه', 'سه شنبه', 'چهار شنبه', 'پنج شنبه', 'جمعه']))
     .nonempty('باید حداقل یک روز انتخاب شود'),
     startTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
     endTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
