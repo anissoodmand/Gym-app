@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ClassSchedule from './model/classSchedule.model';
-import {z} from 'zod';
+import {date, z} from 'zod';
 import { create } from 'domain';
 
 const createClassScheduleSchema = z.object({
@@ -36,5 +36,36 @@ export const createClassSchedule = async (req:Request , res:Response): Promise<v
          console.error('Error creating class schedule:', error);
      res.status(500).json({ success: false, message: 'خطای سرور' });
      return
+    }
+}
+
+export const getAllClasses = async(req:Request , res:Response) =>{
+    try {
+        const classes = await ClassSchedule.find();
+        if(!classes){
+            res.status(404).json({success: false , message: "هیچ کلاسی یافت نشد!"});
+            return
+        }
+        res.status(200).json({success: true , message: "تمامی کلاس ها: " , data: classes});
+        return
+    } catch (error) {
+         res.status(500).json({ success: false, message: 'خطای سرور' });
+         return
+    }
+}
+
+export const getClassInfoById = async(req:Request , res:Response) =>{
+    try {
+        const {id} = req.params;
+        const myClass = await ClassSchedule.findById(id);
+        if(!myClass){
+             res.status(404).json({success: false , message: "!کلاس مورد نظر یافت نشد"});
+            return
+        }
+          res.status(200).json({success: true , message: " اطلاعات کلاس مورد نظر شما" , data: myClass});
+        return
+    } catch (error) {
+         res.status(500).json({ success: false, message: 'خطای سرور' });
+         return
     }
 }
