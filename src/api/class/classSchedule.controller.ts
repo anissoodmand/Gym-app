@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import ClassSchedule from './model/classSchedule.model';
 import {date, z} from 'zod';
 import { create } from 'domain';
+import { title } from 'process';
 
 const createClassScheduleSchema = z.object({
     title: z.string().min(1, 'عنوان الزامی است'),
@@ -42,11 +43,23 @@ export const createClassSchedule = async (req:Request , res:Response): Promise<v
 export const getAllClasses = async(req:Request , res:Response) =>{
     try {
         const classes = await ClassSchedule.find();
-        if(!classes){
+        if(!classes || classes.length === 0){
             res.status(404).json({success: false , message: "هیچ کلاسی یافت نشد!"});
             return
         }
-        res.status(200).json({success: true , message: "تمامی کلاس ها: " , data: classes});
+          const allClasses = classes.map(cls => ({
+            title : cls.title,
+            category: cls.category,
+            coach: cls.coach,
+            days: cls.days,
+            startTime: cls.startTime,
+            endTime: cls.endTime,
+            capacity: cls.capacity,
+            isActive: cls.isActive,
+            column: cls.column,
+             row: cls. row
+          }));
+        res.status(200).json({success: true , message: "تمامی کلاس ها: " , data: allClasses});
         return
     } catch (error) {
          res.status(500).json({ success: false, message: 'خطای سرور' });
@@ -66,6 +79,37 @@ export const getClassInfoById = async(req:Request , res:Response) =>{
         return
     } catch (error) {
          res.status(500).json({ success: false, message: 'خطای سرور' });
+         return
+    }
+}
+
+export const updateClass = async(req:Request , res:Response) =>{
+    try {
+        const {id} = req.params;
+        const deletedClass = await ClassSchedule.findByIdAndDelete(id);
+        if(!deleteClass){
+           res.status(404).json({success: false , message: "!کلاس مورد نظر یافت نشد"});
+            return  
+        }
+          res.status(200).json({success: true , message: " اطلاعات کلاس مورد نظر شما" });
+        return
+    } catch (error) {
+        
+    }
+}
+
+export const deleteClass = async(req:Request , res:Response) =>{
+    try {
+         const {id} = req.params;
+        const deletedClass = await ClassSchedule.findByIdAndDelete(id);
+        if(!deleteClass){
+           res.status(404).json({success: false , message: "!کلاس مورد نظر یافت نشد"});
+            return  
+        }
+          res.status(200).json({success: true , message: "کلاس با موفقیت حذف شد "});
+        return
+    } catch (error) {
+         res.status(500).json({ success: false, message: '-خطای سرور' });
          return
     }
 }
