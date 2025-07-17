@@ -4,19 +4,21 @@ import {date, z} from 'zod';
 import { create } from 'domain';
 import { title } from 'process';
 
+
+const columnRowByDaySchema = z.object({
+  day: z.enum( ['شنبه', 'یک‌ شنبه', 'دو شنبه', 'سه‌ شنبه', 'چهار شنبه', 'پنج‌ شنبه', 'جمعه']),
+  column: z.number().min(0, 'مقدار ستون نامعتبر است'),
+  row: z.number().min(0, 'مقدار سطر نامعتبر است'),
+});
 const createClassScheduleSchema = z.object({
     title: z.string().min(1, 'عنوان الزامی است'),
     category: z.string().min(1, 'دسته بندی الزامی است'),
     coach: z.string().min(1, 'شناسه مربی الزامی است'),
-    days: z
-    .array(z.enum(['شنبه', 'یک شنبه', 'دو شنبه', 'سه شنبه', 'چهار شنبه', 'پنج شنبه', 'جمعه']))
-    .nonempty('باید حداقل یک روز انتخاب شود'),
+    days:z.array(columnRowByDaySchema).nonempty('باید حداقل یک روز انتخاب شود'),
     startTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
     endTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
     capacity: z.number().min(1, 'ظرفیت باید حداقل ۱ باشد'),
     isActive:z.boolean().default(true),
-    column: z.number().min(0),
-    row: z.number().min(0),
 })
 
 export const createClassSchedule = async (req:Request , res:Response): Promise<void> =>{
@@ -30,8 +32,8 @@ export const createClassSchedule = async (req:Request , res:Response): Promise<v
             })
             return
         }
-        const { title,category ,coach,days,startTime,endTime,capacity,column,row,isActive} = parsed.data;
-        const newSchedule = await ClassSchedule.create({title,category ,coach,days,startTime,endTime,capacity,column,row,isActive:true});
+        const { title,category ,coach,days,startTime,endTime,capacity,isActive} = parsed.data;
+        const newSchedule = await ClassSchedule.create({title,category ,coach,days,startTime,endTime,capacity,isActive:true});
         res.status(201).json({success: true, data: newSchedule, message: 'برنامه جدید ساخته شد'})
     } catch (error) {
          console.error('Error creating class schedule:', error);
@@ -56,8 +58,7 @@ export const getAllClasses = async(req:Request , res:Response) =>{
             endTime: cls.endTime,
             capacity: cls.capacity,
             isActive: cls.isActive,
-            column: cls.column,
-             row: cls. row
+
           }));
         res.status(200).json({success: true , message: "تمامی کلاس ها: " , data: allClasses});
         return
