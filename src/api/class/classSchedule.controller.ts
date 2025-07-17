@@ -6,7 +6,7 @@ import { title } from 'process';
 
 
 const columnRowByDaySchema = z.object({
-  day: z.enum(["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهارشنبه", "پنج شنبه" ,"جمعه"]),
+  day: z.enum(["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهار شنبه", "پنج شنبه" ,"جمعه"]),
   column: z.number().min(0, 'مقدار ستون نامعتبر است'),
   row: z.number().min(0, 'مقدار سطر نامعتبر است'),
 });

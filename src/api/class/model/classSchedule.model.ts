@@ -19,7 +19,7 @@ const columnRowByDaySchema = new Schema(
     day: {
       type: String,
       required: true,
-      enum: ["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهارشنبه", "پنج شنبه" ,"جمعه"],
+      enum: ["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهار شنبه", "پنج شنبه" ,"جمعه"],
     },
     column: { type: Number, required: true },
     row: { type: Number, required: true },
