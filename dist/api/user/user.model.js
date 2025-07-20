@@ -38,7 +38,7 @@ const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ["admin", "user"], default: "user" },
+    role: { type: String, enum: ["admin", "user", "coach"], default: "user" },
 });
 const User = mongoose_1.default.model("User", userSchema);
 exports.default = User;

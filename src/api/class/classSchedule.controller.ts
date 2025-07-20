@@ -49,18 +49,18 @@ export const getAllClasses = async(req:Request , res:Response) =>{
             res.status(404).json({success: false , message: "هیچ کلاسی یافت نشد!"});
             return
         }
-          const allClasses = classes.map(cls => ({
-            title : cls.title,
-            category: cls.category,
-            coach: cls.coach,
-            days: cls.days,
-            startTime: cls.startTime,
-            endTime: cls.endTime,
-            capacity: cls.capacity,
-            isActive: cls.isActive,
+        //   const allClasses = classes.map(cls => ({
+        //     title : cls.title,
+        //     category: cls.category,
+        //     coach: cls.coach,
+        //     days: cls.days,
+        //     startTime: cls.startTime,
+        //     endTime: cls.endTime,
+        //     capacity: cls.capacity,
+        //     isActive: cls.isActive,
 
-          }));
-        res.status(200).json({success: true , message: "تمامی کلاس ها: " , data: allClasses});
+        //   }));
+        res.status(200).json({success: true ,total: classes.length , message: "تمامی کلاس ها: " , data: classes});
         return
     } catch (error) {
          res.status(500).json({ success: false, message: 'خطای سرور' });
