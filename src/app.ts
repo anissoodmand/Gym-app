@@ -3,7 +3,9 @@ import { connectDB } from './config/database';
 import dotenv from 'dotenv';
 import authRoutes from './api/auth/auth.routes';
 import userRoutes from './api/user/user.routes';
-import classScheduleRoutes from './api/class/classSchedule.routes';
+import classScheduleRoutes from './api/class/routes/classSchedule.routes';
+import enrollRoutes from './api/class/routes/enroll.routes'
+import sessionRoutes from './api/class/routes/session.routes'
 import cors from 'cors';
 import { TestModel } from './test';
 import cookieParser from 'cookie-parser';
@@ -36,7 +38,8 @@ app.use(cors(corsOptions));
 app.use('/api/auth' , authRoutes); //*********************** 
 app.use('/api/user' , userRoutes);
 app.use('/api/class' ,classScheduleRoutes)
-
+app.use('/api/class' ,enrollRoutes)
+app.use('/api/class' ,sessionRoutes)
 connectDB();
 
 const PORT = process.env.PORT || 5000;

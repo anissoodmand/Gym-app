@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import {createClassSchedule , getAllClasses,getClassInfoById ,updateClass ,deleteClass} from './classSchedule.controller';
+import {createClassSchedule , getAllClasses,getClassInfoById ,updateClass ,deleteClass} from '../controllers/classSchedule.controller';
 
 const router= express.Router();
 router.post('/create-schedule' , createClassSchedule);
