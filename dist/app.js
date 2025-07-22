@@ -38,7 +38,7 @@ app.use('/api/auth', auth_routes_1.default);
 app.use('/api/user', user_routes_1.default);
 app.use('/api/class', classSchedule_routes_1.default);
 app.use('/api/class', enroll_routes_1.default);
-app.use('/api/class', session_routes_1.default);
+app.use('/api/class/session', session_routes_1.default);
 (0, database_1.connectDB)();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 server running on port ${PORT}`));

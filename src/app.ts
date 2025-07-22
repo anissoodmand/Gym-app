@@ -39,7 +39,7 @@ app.use('/api/auth' , authRoutes); //***********************
 app.use('/api/user' , userRoutes);
 app.use('/api/class' ,classScheduleRoutes)
 app.use('/api/class' ,enrollRoutes)
-app.use('/api/class' ,sessionRoutes)
+app.use('/api/class/session' ,sessionRoutes)
 connectDB();
 
 const PORT = process.env.PORT || 5000;
