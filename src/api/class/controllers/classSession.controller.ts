@@ -5,6 +5,8 @@ import { parseISO, isBefore, addDays, format } from 'date-fns';
 import { faIR } from 'date-fns/locale';
 import moment from 'moment-jalaali';
 
+const normalizeDay = (day: string) =>
+        day.replace(/\s/g, '').replace('ی', 'ي').trim();
 
 const dayMap: { [key: string]: number } = {
   'شنبه': 6,
@@ -36,8 +38,8 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
       const dayName = current.format('dddd'); // مثل: "Sunday"
 
       const persianDay = moment(current).locale('fa').format('dddd');
-
-      if (days.some((d: ColumnRowByDay) => d.day === persianDay)) {
+      
+      if (days.some((d: ColumnRowByDay) => normalizeDay(d.day) === normalizeDay(persianDay))) {
         const session = await ClassSession.create({
           scheduleId: schedule._id,
           date: current.format('YYYY-MM-DD'),
