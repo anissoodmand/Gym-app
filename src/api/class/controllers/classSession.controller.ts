@@ -62,3 +62,12 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ success: false, message: 'خطای سرور در ساخت جلسات' });
   }
 };
+
+export const getAllSessionsWithCapacity = async (req: Request , res: Response) =>{
+  try {
+   const sessions = await ClassSession.find().lean();
+    
+  } catch (error) {
+    
+  }
+}
