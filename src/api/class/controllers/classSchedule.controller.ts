@@ -3,7 +3,8 @@ import ClassSchedule from '../model/classSchedule.model';
 import {date, z} from 'zod';
 import { create } from 'domain';
 import { title } from 'process';
-
+import moment from 'moment-jalaali';
+import ClassSession from '../model/classSession.model'
 
 const columnRowByDaySchema = z.object({
   day: z.enum(["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهار شنبه", "پنج شنبه" ,"جمعه"]),
@@ -112,3 +113,44 @@ export const deleteClass = async(req:Request , res:Response) =>{
          return
     }
 }
+
+export const getRemainingCapacity = async (req: Request, res: Response) => {
+  try {
+    const { scheduleId } = req.params;
+
+    const schedule = await ClassSchedule.findById(scheduleId);
+    if (!schedule) {
+       res.status(404).json({ success: false, message: 'برنامه کلاس پیدا نشد' });
+       return
+    }
+
+    const today = moment().format('YYYY-MM-DD');
+
+    const sessions = await ClassSession.find({
+      scheduleId,
+      date: { $gte: today },
+      isCanceled: false,
+    });
+
+    const capacity = schedule.capacity;
+    const totalSessions = sessions.length;
+
+    const remainingPerSession = sessions.map(s => capacity - s.registeredUsers.length);
+
+    const minRemaining = Math.min(...remainingPerSession);
+    const avgRemaining = Math.round(
+      remainingPerSession.reduce((a, b) => a + b, 0) / totalSessions
+    );
+
+    res.status(200).json({
+      success: true,
+      totalSessions,
+      classCapacity: capacity,
+      minRemaining,
+      avgRemaining,
+    });
+  } catch (error) {
+    console.error('خطا در دریافت ظرفیت کلاس:', error);
+    res.status(500).json({ success: false, message: 'خطای سرور در بررسی ظرفیت' });
+  }
+};

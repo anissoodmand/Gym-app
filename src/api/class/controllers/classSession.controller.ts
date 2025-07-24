@@ -63,11 +63,32 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
   }
 };
 
-export const getAllSessionsWithCapacity = async (req: Request , res: Response) =>{
+export const getAllSessionsWithCapacity = async (req: Request, res: Response) => {
   try {
-   const sessions = await ClassSession.find().lean();
-    
+    // همه جلسات را پیدا می‌کنیم
+    const sessions = await ClassSession.find().lean();
+
+    // برای هر جلسه ظرفیت باقی‌مانده را محاسبه می‌کنیم
+    const sessionsWithCapacity = await Promise.all(
+      sessions.map(async (session) => {
+        const schedule = await ClassSchedule.findById(session.scheduleId).lean();
+        const capacity = schedule?.capacity || 0;
+        const remaining = capacity - (session.registeredUsers?.length || 0);
+
+        return {
+          ...session,
+          capacity,
+          remainingCapacity: remaining >= 0 ? remaining : 0,
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      data: sessionsWithCapacity,
+    });
   } catch (error) {
-    
+    console.error('Error fetching sessions:', error);
+    res.status(500).json({ success: false, message: 'خطا در دریافت جلسات' });
   }
-}
+};

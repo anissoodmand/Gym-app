@@ -95,3 +95,43 @@ export const enrollUserMonthly = async (req: Request, res: Response): Promise<vo
     res.status(500).json({ success: false, message: 'خطای سرور در ثبت‌نام' });
   }
 };
+
+
+export const cancelUserMonthlyEnrollment = async (req: Request, res: Response) => {
+  try {
+    const { scheduleId, userId } = req.body;
+
+    const schedule = await ClassSchedule.findById(scheduleId);
+    if (!schedule) {
+       res.status(404).json({ success: false, message: 'برنامه کلاس یافت نشد' });
+       return
+    }
+
+    const today = moment().format('YYYY-MM-DD');
+
+    const sessions = await ClassSession.find({
+      scheduleId,
+      date: { $gte: today },
+      isCanceled: false,
+      registeredUsers: userId,
+    });
+
+    let cancelCount = 0;
+
+    for (const session of sessions) {
+      session.registeredUsers = session.registeredUsers.filter(
+        (id) => id.toString() !== userId
+      );
+      await session.save();
+      cancelCount++;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `${cancelCount} جلسه لغو ثبت‌نام شد.`,
+    });
+  } catch (error) {
+    console.error('خطا در لغو ثبت‌نام ماهانه:', error);
+    res.status(500).json({ success: false, message: 'خطای سرور در لغو ثبت‌نام' });
+  }
+};

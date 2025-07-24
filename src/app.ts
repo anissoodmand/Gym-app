@@ -38,7 +38,7 @@ app.use(cors(corsOptions));
 app.use('/api/auth' , authRoutes); //*********************** 
 app.use('/api/user' , userRoutes);
 app.use('/api/class' ,classScheduleRoutes)
-app.use('/api/class/enrollments' ,enrollRoutes)
+app.use('/api/class/enrollment' ,enrollRoutes)
 app.use('/api/class/session' ,sessionRoutes)
 connectDB();
 
