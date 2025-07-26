@@ -18,7 +18,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const zod_1 = require("zod");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerUserSchema = zod_1.z.object({
-    name: zod_1.z.string().min(3, "name is required AMO JON"),
+    name: zod_1.z.string().min(3, "name is required"),
     phone: zod_1.z.string().regex(/^09\d{9}$/, "this phone number is invalid"),
     password: zod_1.z.string().min(6, "password should be 6 char and more")
 });

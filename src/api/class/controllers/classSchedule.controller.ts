@@ -147,7 +147,7 @@ export const getRemainingCapacity = async (req: Request, res: Response) => {
       totalSessions,
       classCapacity: capacity,
       minRemaining,
-      avgRemaining,
+      //avgRemaining,
     });
   } catch (error) {
     console.error('خطا در دریافت ظرفیت کلاس:', error);

@@ -1,8 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
-import {getMe} from "./user.controller";
+import {getMe ,getAllUsers ,getUserInfoById, deleteUser} from "./user.controller";
 import { authenticateToken } from '../../middlewares/auth.middleware';
 
 const router = express.Router();
 
 router.get('/me' , authenticateToken , getMe);
+router.get('/allUsers' ,getAllUsers);
+router.get('/:id' ,getUserInfoById);
+router.delete(':/id', deleteUser);
+
 export default router;

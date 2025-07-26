@@ -23,3 +23,47 @@ export const getMe = async (req: AuthenticatedRequest, res: Response): Promise<v
     res.status(500).json({ success: false, message: "خطای سرور", error: err.message });
   }
 }
+
+export const getAllUsers = async (req:Request , res:Response) =>{
+  try {
+    const users = await User.find();
+    if(!users){
+      res.status(404).json({success: false, message: "هیچ کاربری یافت نشد"})
+      return;
+    }
+    res.status(200).json({success: true,total :users.length , message:"اطلاعات همه کاربران: " ,users})
+    return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "خطای سرور- بازگرداندن لیست کاربران با خطا مواجه شد" });
+  }
+}
+
+export const getUserInfoById = async (req:Request , res:Response) =>{
+  try {
+    const {id} = req.params;
+    const user = await User.findById(id);
+    if(!user){
+      res.status(404).json({success: false, message: " کاربر یافت نشد"});
+      return
+    }
+     res.status(200).json({success: true, message:"اطلاعات کاربر: " ,user})
+    return;
+  } catch (error) {
+     res.status(500).json({ success: false, message: "خطای سرور- بازگرداندن کاربر با خطا مواجه شد" })
+  }
+}
+
+export const deleteUser = async (req:Request , res:Response) =>{
+  try {
+    const {id} = req.params;
+    const deletedUser = await User.findByIdAndDelete(id);
+    if(!deletedUser){
+       res.status(404).json({success: false, message: " کاربر یافت نشد"});
+      return
+    }
+      res.status(200).json({success: true , message: "کاربر با موفقیت حذف شد "});
+        return
+  } catch (error) {
+    res.status(500).json({ success: false, message: '-خطای سرور' });
+  }
+}
