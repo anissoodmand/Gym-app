@@ -39,6 +39,7 @@ const userSchema = new mongoose_1.Schema({
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user", "coach"], default: "user" },
+    status: { type: String, enum: ['active', 'pending'], default: 'active' },
 });
 const User = mongoose_1.default.model("User", userSchema);
 exports.default = User;

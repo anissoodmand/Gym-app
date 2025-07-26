@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "./user.model";
 import { authenticateToken} from '../../middlewares/auth.middleware'
+import bcrypt from 'bcrypt';
 
 interface AuthenticatedRequest extends Request{
     user?: {id:string};
@@ -26,7 +27,7 @@ export const getMe = async (req: AuthenticatedRequest, res: Response): Promise<v
 
 export const getAllUsers = async (req:Request , res:Response) =>{
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     if(!users){
       res.status(404).json({success: false, message: "هیچ کاربری یافت نشد"})
       return;
@@ -52,7 +53,30 @@ export const getUserInfoById = async (req:Request , res:Response) =>{
      res.status(500).json({ success: false, message: "خطای سرور- بازگرداندن کاربر با خطا مواجه شد" })
   }
 }
+export const createUserByAdmin = async (req:Request , res:Response) =>{
+try {
+    const { name, phone, password, status = 'active', role = 'user' } = req.body;
 
+    const existingUser = await User.findOne({ phone });
+    if (existingUser) { res.status(400).json({ message: 'این شماره قبلاً ثبت شده است.' });
+   return
+    };
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      phone,
+      password: hashedPassword,
+      status,
+      role,
+    });
+
+    res.status(201).json({success:true, message: 'کاربر با موفقیت ساخته شد.',newUser });
+} catch (error) {
+   res.status(500).json({ success: false, message: 'خطای داخلی سرور' });
+}
+}
 export const deleteUser = async (req:Request , res:Response) =>{
   try {
     const {id} = req.params;
