@@ -64,6 +64,6 @@ export const deleteUser = async (req:Request , res:Response) =>{
       res.status(200).json({success: true , message: "کاربر با موفقیت حذف شد "});
         return
   } catch (error) {
-    res.status(500).json({ success: false, message: '-خطای سرور' });
+    res.status(500).json({ success: false, message: 'لطفا بررسی کنید-خطای سرور' });
   }
 }
