@@ -55,6 +55,7 @@ export const getUserInfoById = async (req:Request , res:Response) =>{
 }
 export const createUserByAdmin = async (req:Request , res:Response) =>{
 try {
+  console.log('📥 درخواست دریافتی:', req.body);
     const { name, phone, password, status = 'active', role = 'user' } = req.body;
 
     const existingUser = await User.findOne({ phone });
@@ -74,6 +75,7 @@ try {
 
     res.status(201).json({success:true, message: 'کاربر با موفقیت ساخته شد.',newUser });
 } catch (error) {
+   console.error('❌ خطا در ساخت کاربر:', error);
    res.status(500).json({ success: false, message: 'خطای داخلی سرور' });
 }
 }
