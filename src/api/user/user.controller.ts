@@ -79,6 +79,24 @@ try {
    res.status(500).json({ success: false, message: 'خطای داخلی سرور' });
 }
 }
+export const updateUser = async (req:Request, res: Response) =>{
+  try {
+    const {id} = req.params;
+    const MyUpdate = req.body;
+    const myUser = await User.findByIdAndUpdate(id , MyUpdate ,{
+        new: true,
+        runValidators: true
+    });
+    if(!myUser){
+      res.status(404).json({success: false, message: " کاربر یافت نشد"});
+      return
+    }
+    res.status(200).json({success: true , message: "کاربر با موفقیت بروزرسانی شد "})
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'لطفا بررسی کنید-خطای سرور' });
+ 
+  }
+}
 export const deleteUser = async (req:Request , res:Response) =>{
   try {
     const {id} = req.params;
