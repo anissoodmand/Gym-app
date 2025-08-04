@@ -55,7 +55,7 @@ export const getUserInfoById = async (req:Request , res:Response) =>{
 }
 export const createUserByAdmin = async (req:Request , res:Response) =>{
 try {
-  console.log('📥 درخواست دریافتی:', req.body);
+ 
     const { name, phone, password, status = 'active', role = 'user' } = req.body;
 
     const existingUser = await User.findOne({ phone });

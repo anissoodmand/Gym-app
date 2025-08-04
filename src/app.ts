@@ -6,6 +6,7 @@ import userRoutes from './api/user/user.routes';
 import classScheduleRoutes from './api/class/routes/classSchedule.routes';
 import enrollRoutes from './api/class/routes/enroll.routes'
 import sessionRoutes from './api/class/routes/session.routes'
+import coachRoutes from './api/coach/coach.routes';
 import cors from 'cors';
 import { TestModel } from './test';
 import cookieParser from 'cookie-parser';
@@ -40,6 +41,7 @@ app.use('/api/user' , userRoutes);
 app.use('/api/class' ,classScheduleRoutes)
 app.use('/api/class/enrollment' ,enrollRoutes)
 app.use('/api/class/session' ,sessionRoutes)
+app.use('/api/coach', coachRoutes)
 connectDB();
 
 const PORT = process.env.PORT || 5000;

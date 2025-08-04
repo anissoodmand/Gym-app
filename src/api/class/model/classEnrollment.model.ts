@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema, Document, Types, Date } from 'mongoose';
 
 export interface IClassEnrollment extends Document {
   userId: Types.ObjectId;
@@ -7,6 +7,8 @@ export interface IClassEnrollment extends Document {
   type: 'monthly' | 'single'; // نوع ثبت‌نام
   paid: boolean; // پرداخت انجام شده یا نه
   price: number;
+  expireTime : Date;
+  coachId: Types.ObjectId;
 }
 
 const ClassEnrollmentSchema = new Schema<IClassEnrollment>(
@@ -14,9 +16,11 @@ const ClassEnrollmentSchema = new Schema<IClassEnrollment>(
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', required: true },
     sessionIds: [{ type: Schema.Types.ObjectId, ref: 'ClassSession', required: true }],
-    type: { type: String, enum: ['monthly', 'single'], required: true },
+    type: { type: String, enum: ['monthly', 'single'], default: 'monthly' },
     paid: { type: Boolean, default: false },
-    price: { type: Number, required: true }
+    price: { type: Number, required: true },
+    expireTime: {type: Date , required: true  },
+    coachId: {type: Schema.Types.ObjectId, ref: 'Coach', required: true}
   },
   { timestamps: true }
 );

@@ -7,7 +7,7 @@ import moment from 'moment-jalaali';
 
 export const enrollInClass = async(req:Request , res:Response): Promise<void> =>{
     try {
-         const { userId, scheduleId, sessionIds, type, price } = req.body;
+         const { userId, scheduleId, sessionIds, type, price  , coachId} = req.body;
             // بررسی ظرفیت جلسات
          const result = await checkCapacityForSessions(sessionIds);
          if(!result.ok){
@@ -36,9 +36,19 @@ export const enrollInClass = async(req:Request , res:Response): Promise<void> =>
       });
       return;
     }
+          // محاسبه‌ی expireTime با توجه به نوع ثبت‌نام
+        let expireTime: Date;
+        if (type === 'monthly') {
+          expireTime = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 روز بعد
+        } else if (type === 'single') {
+          expireTime = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); // 1 روز بعد (مثلاً)
+        } else {
+          expireTime = new Date(); // مقدار پیش‌فرض اگر نوع ثبت‌نام مشخص نباشد
+        }
+
            // ثبت‌نام در دیتابیس
         const enrollment = await ClassEnrollment.create({
-            userId, scheduleId, sessionIds, type, paid:false, price
+            userId, scheduleId, sessionIds, type, paid:false, price , expireTime , coachId
         })
         //افزودن کاربر به جلسات انتخابی
         await ClassSession.updateMany(
