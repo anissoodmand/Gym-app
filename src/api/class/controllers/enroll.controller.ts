@@ -7,7 +7,24 @@ import moment from 'moment-jalaali';
 
 export const enrollInClass = async(req:Request , res:Response): Promise<void> =>{
     try {
-         const { userId, scheduleId, sessionIds, type, price  , coachId} = req.body;
+         const { userId, scheduleId, type = 'monthly', price  , coachId} = req.body;
+           // 1. دریافت لیست جلسات آینده این برنامه
+    const today = new Date();
+    const sessions = await ClassSession.find({
+      scheduleId,
+      date: { $gte: today },
+    }) as Array<{ _id: any }>;
+
+    if (!sessions.length) {
+      res.status(404).json({
+        success: false,
+        message: 'هیچ جلسه‌ای برای این برنامه پیدا نشد.',
+      });
+      return;
+    }
+
+    const sessionIds = sessions.map((s) => s._id.toString());
+
             // بررسی ظرفیت جلسات
          const result = await checkCapacityForSessions(sessionIds);
          if(!result.ok){
