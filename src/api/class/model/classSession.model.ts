@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IClassSession extends Document {
  scheduleId: Types.ObjectId;
- date: string;
+ date: Date;
  registeredUsers: Types.ObjectId[];
  isCanceled: boolean;   
 }
@@ -10,7 +10,7 @@ export interface IClassSession extends Document {
 const ClassSessionSchema = new Schema<IClassSession>(
     {
         scheduleId: {type: Schema.Types.ObjectId , ref: "ClassSchedule" ,required: true},
-         date: { type: String, required: true },
+         date: { type: Date, required: true },
          registeredUsers: [{type: Schema.Types.ObjectId , ref: "User" }],
           isCanceled: { type: Boolean, default: false }
   },

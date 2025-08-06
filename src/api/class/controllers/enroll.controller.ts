@@ -4,11 +4,12 @@ import ClassEnrollment from '../model/classEnrollment.model';
 import ClassSchedule from '../model/classSchedule.model';
 import { checkCapacityForSessions } from '../services/classCapacity.service';
 import moment from 'moment-jalaali';
+import Coach from '../../coach/coach.model';
 
 export const enrollInClass = async(req:Request , res:Response): Promise<void> =>{
     try {
-         const { userId, scheduleId, type = 'monthly', price  , coachId} = req.body;
-           // 1. دریافت لیست جلسات آینده این برنامه
+    const { userId, scheduleId, type = 'monthly', price  , coachId} = req.body;
+     // 1. دریافت لیست جلسات آینده این برنامه
     const today = new Date();
     const sessions = await ClassSession.find({
       scheduleId,
