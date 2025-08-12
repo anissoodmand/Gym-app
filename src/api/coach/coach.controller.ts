@@ -54,6 +54,7 @@ export const sessionAttendance = async(req:Request , res:Response)=>{
 
     res.status(200).json({success:true, message: "حضور مربی با موفقیت ثبت شد و از تمامی کاربران این کلاس یک جلسه کسر شد"})
   } catch (error) {
-      res.status(500).json({ message: "خطا در ثبت حضور مربی" });
+    console.error('Error CoachAttendance :', error);
+      res.status(500).json({success: false, message: "خطا در ثبت حضور مربی" });
   }
 }
