@@ -9,18 +9,20 @@ export interface IClassEnrollment extends Document {
   price: number;
   expireTime : Date;
   coachId: Types.ObjectId;
+  remainingSessions: number;
 }
 
 const ClassEnrollmentSchema = new Schema<IClassEnrollment>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', required: true , index: true},
     sessionIds: [{ type: Schema.Types.ObjectId, ref: 'ClassSession', required: true }],
     type: { type: String, enum: ['monthly', 'single'], default: 'monthly' },
     paid: { type: Boolean, default: false },
     price: { type: Number, required: true },
     expireTime: {type: Date , required: true  },
-    coachId: {type: Schema.Types.ObjectId, ref: 'Coach', required: true}
+    coachId: {type: Schema.Types.ObjectId, ref: 'Coach', required: true},
+    remainingSessions: { type: Number, required: true, default: 12 }
   },
   { timestamps: true }
 );

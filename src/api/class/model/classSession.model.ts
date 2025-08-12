@@ -7,6 +7,7 @@ export interface IClassSession extends Document {
  isCanceled: boolean;  
  startTime : string;
  endTime: string; 
+ status: 'scheduled' | 'canceled' | 'held';
 }
 
 const ClassSessionSchema = new Schema<IClassSession>(
@@ -16,7 +17,8 @@ const ClassSessionSchema = new Schema<IClassSession>(
         registeredUsers: [{type: Schema.Types.ObjectId , ref: "User" }],
         isCanceled: { type: Boolean, default: false },
         startTime: { type: String, required: true },
-        endTime: { type: String, required: true }
+        endTime: { type: String, required: true },
+         status: { type: String, enum: ['scheduled', 'canceled', 'held'], default: 'scheduled' ,index: true},
   },
   { timestamps: true }
 );

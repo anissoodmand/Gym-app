@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import User from "./user.model";
 import { authenticateToken} from '../../middlewares/auth.middleware'
 import bcrypt from 'bcrypt';
-
+import ClassEnrollment from '../class/model/classEnrollment.model';
+import ClassSession from '../class/model/classSession.model';
+import ClassSchedule from '../class/model/classSchedule.model';
 interface AuthenticatedRequest extends Request{
     user?: {id:string};
 }
@@ -110,4 +112,32 @@ export const deleteUser = async (req:Request , res:Response) =>{
   } catch (error) {
     res.status(500).json({ success: false, message: 'لطفا بررسی کنید-خطای سرور' });
   }
+}
+export const getUserAdminView = async (req: Request, res: Response) =>{
+   try {
+      const {userId} = req.params;
+  const includeExpired = req.query.includeExpired === 'true';
+
+  const user = await User.findById(userId).select('-password').lean();
+   if (!user){
+    res.status(404).json({ success: false, message: 'کاربر پیدا نشد' })
+    return};
+
+   const enrollFilter : any= {userId};
+   if(!enrollFilter){enrollFilter.expireTime = { $gte: new Date() }}
+
+   const enrollments = await ClassEnrollment.find(enrollFilter)
+    .populate({ path: 'scheduleId', select: 'title'})
+      .select("remainingSessions scheduleId");
+
+      const result = enrollments.map(enroll => ({
+      title: enroll.scheduleId,
+      remainingSessions: enroll.remainingSessions
+    }));
+
+  
+    res.status(200).json({success: true , user , result })
+   } catch (error) {
+     res.status(500).json({ success: false, message: "خطا در دریافت اطلاعات کلاس‌ها" })
+   }
 }

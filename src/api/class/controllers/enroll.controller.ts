@@ -14,7 +14,7 @@ export const enrollInClass = async(req:Request , res:Response): Promise<void> =>
     const sessions = await ClassSession.find({
       scheduleId,
       date: { $gte: today },
-    }) as Array<{ _id: any }>;
+    }).sort({ date: 1 }) as Array<{ _id: any }>;
 
     if (!sessions.length) {
       res.status(404).json({
@@ -23,8 +23,8 @@ export const enrollInClass = async(req:Request , res:Response): Promise<void> =>
       });
       return;
     }
-
-    const sessionIds = sessions.map((s) => s._id.toString());
+    const selectedSessions = sessions.slice(0, 12);
+    const sessionIds = selectedSessions.map((s) => s._id.toString());
 
             // بررسی ظرفیت جلسات
          const result = await checkCapacityForSessions(sessionIds);
