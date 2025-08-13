@@ -41,7 +41,7 @@ export const sessionAttendance = async(req:Request , res:Response)=>{
       res.status(404).json({ success: false, message:"جلسه یافت نشد"})
       return;
     }
-    const exist = await CoachAttendance.findById({sessionId});
+    const exist = await CoachAttendance.findOne({sessionId});
     if(exist){
       res.status(400).json({success: false, message: "حضور مربی قبلاً ثبت شده"});
       return
