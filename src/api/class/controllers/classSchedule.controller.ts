@@ -15,10 +15,12 @@ const createClassScheduleSchema = z.object({
     title: z.string().min(1, 'عنوان الزامی است'),
     category: z.string().min(1, 'دسته بندی الزامی است'),
     coach: z.string().min(1, 'شناسه مربی الزامی است'),
+    coachId:z.string(),
     days:z.array(columnRowByDaySchema).nonempty('باید حداقل یک روز انتخاب شود'),
     startTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
     endTime: z.string().regex(/^\d{2}:\d{2}$/, 'فرمت ساعت باید HH:MM باشد'),
     capacity: z.number().min(1, 'ظرفیت باید حداقل ۱ باشد'),
+    price:z.number(),
     isActive:z.boolean().default(true),
 })
 
@@ -33,8 +35,8 @@ export const createClassSchedule = async (req:Request , res:Response): Promise<v
             })
             return
         }
-        const { title,category ,coach,days,startTime,endTime,capacity,isActive} = parsed.data;
-        const newSchedule = await ClassSchedule.create({title,category ,coach,days,startTime,endTime,capacity,isActive:true});
+        const { title,category ,coach,coachId,days,startTime,endTime,capacity,price, isActive} = parsed.data;
+        const newSchedule = await ClassSchedule.create({title,category ,coach,coachId,days,startTime,endTime,capacity,price, isActive:true});
         res.status(201).json({success: true, data: newSchedule, message: 'برنامه جدید ساخته شد'})
     } catch (error) {
          console.error('Error creating class schedule:', error);

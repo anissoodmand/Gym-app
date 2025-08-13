@@ -8,7 +8,7 @@ import ClassEnrollment from '../class/model/classEnrollment.model';
 export const createCoach = async (req:Request , res:Response) =>{
 try {
  
-    const { name, phone, password, category , presence } = req.body;
+    const { name, phone, password, category , presence ,scheduleId } = req.body;
 
     const existingUser = await Coach.findOne({ phone });
     if (existingUser) { res.status(400).json({ message: 'این شماره قبلاً ثبت شده است.' });
@@ -22,7 +22,8 @@ try {
       phone,
       password: hashedPassword,
       category,
-      presence
+      presence,
+      scheduleId
     });
 
     res.status(201).json({success:true, message: 'مربی با موفقیت ساخته شد.',newCoach });
