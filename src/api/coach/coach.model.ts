@@ -15,6 +15,6 @@ const coachSchema: Schema = new Schema({
     password: { type: String, required: true },
     category: { type: String, required: true },
     presence:{ type: Boolean , default : false},
-    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', required: true }
+    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', }
 });
 export default mongoose.model<ICoach>('Coach', coachSchema);
