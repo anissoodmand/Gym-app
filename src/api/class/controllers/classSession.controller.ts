@@ -34,12 +34,25 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
     let current = moment(startDate, 'YYYY-MM-DD');
     const end = moment(endDate, 'YYYY-MM-DD');
 
-    while (current.isSameOrBefore(end)) {
-      const dayName = current.format('dddd'); // مثل: "Sunday"
+    console.log('🔍 Debug Info');
+    console.log('Schedule Days:', days.map((d: any) => d.day));
+    console.log('Start Date:', startDate, 'End Date:', endDate);
 
+    while (current.isSameOrBefore(end)) {
+      const englishDay = current.format('dddd'); // Sunday, Monday, ...
       const persianDay = moment(current).locale('fa').format('dddd');
-      
-      if (days.some((d: ColumnRowByDay) => normalizeDay(d.day) === normalizeDay(persianDay))) {
+
+      // چک کردن همخوانی
+      const match = days.some((d: ColumnRowByDay) => normalizeDay(d.day) === normalizeDay(persianDay));
+
+      console.log({
+        currentDate: current.format('YYYY-MM-DD'),
+        englishDay,
+        persianDay,
+        matchWithSchedule: match
+      });
+
+      if (match) {
         const session = await ClassSession.create({
           scheduleId: schedule._id,
           date: current.format('YYYY-MM-DD'),
@@ -49,8 +62,11 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
         });
         sessions.push(session);
       }
+
       current = current.add(1, 'day');
     }
+
+    console.log(`✅ Created ${sessions.length} sessions`);
 
     res.status(201).json({
       success: true,
@@ -58,10 +74,56 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
       data: sessions
     });
   } catch (error) {
-    console.error('Error generating sessions:', error);
+    console.error('❌ Error generating sessions:', error);
     res.status(500).json({ success: false, message: 'خطای سرور در ساخت جلسات' });
   }
 };
+
+
+// export const generateSessions = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const { scheduleId, startDate, endDate } = req.body;
+
+//     const schedule = await ClassSchedule.findById(scheduleId);
+//     if (!schedule) {
+//       res.status(404).json({ success: false, message: 'برنامه کلاس پیدا نشد' });
+//       return;
+//     }
+
+//     const { days, startTime, endTime } = schedule;
+//     const sessions = [];
+
+//     let current = moment(startDate, 'YYYY-MM-DD');
+//     const end = moment(endDate, 'YYYY-MM-DD');
+
+//     while (current.isSameOrBefore(end)) {
+//       const dayName = current.format('dddd'); // مثل: "Sunday"
+
+//       const persianDay = moment(current).locale('fa').format('dddd');
+      
+//       if (days.some((d: ColumnRowByDay) => normalizeDay(d.day) === normalizeDay(persianDay))) {
+//         const session = await ClassSession.create({
+//           scheduleId: schedule._id,
+//           date: current.format('YYYY-MM-DD'),
+//           startTime,
+//           endTime,
+//           registeredUsers: [],
+//         });
+//         sessions.push(session);
+//       }
+//       current = current.add(1, 'day');
+//     }
+
+//     res.status(201).json({
+//       success: true,
+//       message: `${sessions.length} جلسه ایجاد شد`,
+//       data: sessions
+//     });
+//   } catch (error) {
+//     console.error('Error generating sessions:', error);
+//     res.status(500).json({ success: false, message: 'خطای سرور در ساخت جلسات' });
+//   }
+// };
 export const deleteAllSessions = async(req:Request , res:Response) =>{
   try {
     const delSessions = await ClassSession.deleteMany();
