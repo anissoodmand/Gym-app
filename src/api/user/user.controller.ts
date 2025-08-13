@@ -84,7 +84,15 @@ try {
 export const updateUser = async (req:Request, res: Response) =>{
   try {
     const {id} = req.params;
-    const MyUpdate = req.body;
+    let MyUpdate = req.body;
+      if(MyUpdate.password){
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(MyUpdate.password , saltRounds);
+      MyUpdate = {
+        ...MyUpdate,
+        password: hashedPassword,
+      };
+    }
     const myUser = await User.findByIdAndUpdate(id , MyUpdate ,{
         new: true,
         runValidators: true
@@ -128,7 +136,8 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
 
    const enrollments = await ClassEnrollment.find(enrollFilter)
     .populate({ path: 'scheduleId', select: 'title'})
-      .select("remainingSessions scheduleId");
+      .select("remainingSessions scheduleId")
+      .lean();
 
       const result = enrollments.map(enroll => ({
       title: enroll.scheduleId,
@@ -138,6 +147,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
   
     res.status(200).json({success: true , user , result })
    } catch (error) {
+    console.error("Error getUserAdminView:", error);
      res.status(500).json({ success: false, message: "خطا در دریافت اطلاعات کلاس‌ها" })
    }
 }

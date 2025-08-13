@@ -48,7 +48,7 @@ export const sessionAttendance = async(req:Request , res:Response)=>{
     }
     await CoachAttendance.create({ sessionId, coachId });    //1
     await ClassEnrollment.updateMany(                         //2
-      { sessionId, remainingSessions: { $gt: 0 } },
+      { scheduleId: mySession.scheduleId , remainingSessions: { $gt: 0 } },
       { $inc: { remainingSessions: -1 } }
     );
 
