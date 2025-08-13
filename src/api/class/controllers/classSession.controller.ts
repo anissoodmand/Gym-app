@@ -62,7 +62,15 @@ export const generateSessions = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ success: false, message: 'خطای سرور در ساخت جلسات' });
   }
 };
+export const deleteAllSessions = async(req:Request , res:Response) =>{
+  try {
+    const delSessions = await ClassSession.deleteMany();
 
+     res.status(200).json({success: true , message: "با موفقیت حذف شد "})
+  } catch (error) {
+    
+  }
+}
 export const getAllSessionsWithCapacity = async (req: Request, res: Response) => {
   try {
     // همه جلسات را پیدا می‌کنیم
