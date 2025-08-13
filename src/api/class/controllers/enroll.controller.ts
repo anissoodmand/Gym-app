@@ -47,7 +47,7 @@ export const enrollInClass = async(req:Request , res:Response): Promise<void> =>
         sessionIds.includes(sessionId.toString())
       );
 
-      res.status(400).json({
+      res.status(409).json({
         success: false,
         message: 'شما قبلاً در برخی از این جلسات ثبت‌نام کرده‌اید.',
         duplicateSessionIds,
