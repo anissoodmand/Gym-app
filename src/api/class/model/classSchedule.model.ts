@@ -1,12 +1,12 @@
 import mongoose,{ Schema , Document, Types} from "mongoose";
 export interface ColumnRowByDay {
-  day: "شنبه"|"یک شنبه"|"دو شنبه"|"سه شنبه"|"چهار شنبه"|"پنج شنبه"|"جمعه";
+  day: "Sunday"|"Monday"|"Tuesday"|"Wednesday"|"Thursday"|"Friday"|"Saturday";
   column: number;
   row: number;
 }
 export interface IClassSchedule extends Document{
     title : string;
-    category: 'کراس فیت' | "پیلاتس"| "فیتنس"| "آمادگی جسمانی"| "ایروبیک";
+    category: 'کراسفیت' | "پیلاتس"| "فیتنس"| "آمادگی جسمانی"| "ایروبیک";
     coach: string;
     coachId: Types.ObjectId;
     days: ColumnRowByDay[];
@@ -21,7 +21,7 @@ const columnRowByDaySchema = new Schema(
     day: {
       type: String,
       required: true,
-      enum: ["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهار شنبه", "پنج شنبه" ,"جمعه"],
+      enum: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     },
     column: { type: Number, required: true },
     row: { type: Number, required: true },

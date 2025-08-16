@@ -7,7 +7,7 @@ import moment from 'moment-jalaali';
 import ClassSession from '../model/classSession.model'
 
 const columnRowByDaySchema = z.object({
-  day: z.enum(["شنبه", "یک شنبه", "دو شنبه", "سه شنبه", "چهار شنبه", "پنج شنبه" ,"جمعه"]),
+  day: z.enum(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]),
   column: z.number().min(0, 'مقدار ستون نامعتبر است'),
   row: z.number().min(0, 'مقدار سطر نامعتبر است'),
 });
