@@ -5,7 +5,7 @@ import { isAdmin , isCoach } from '../../middlewares/checkRoles';
 
 const router = express.Router();
 
-router.post('/create' ,createUserByAdmin)
+router.post('/create' ,authenticateToken,isCoach,createUserByAdmin)
 router.get('/me' , authenticateToken , getMe);
 router.get('/allUsers' ,getAllUsers);
 router.get('/view/:userId' ,getUserAdminView);
