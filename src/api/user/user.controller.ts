@@ -135,7 +135,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
    if(!enrollFilter){enrollFilter.expireTime = { $gte: new Date() }}
 
    const enrollments = await ClassEnrollment.find(enrollFilter)
-    .populate({ path: 'scheduleId', select: 'title days', model: 'ClassSchedule', strictPopulate: false })
+    .populate({ path: 'scheduleId', select: 'title days.day', model: 'ClassSchedule', strictPopulate: false })
     .populate({ path: "coachId", select: "name", model: "Coach", strictPopulate: false })
       .select("remainingSessions scheduleId coachId createdAt")
       .lean();
