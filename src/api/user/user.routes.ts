@@ -10,7 +10,7 @@ router.get('/me' , authenticateToken , getMe);
 router.get('/allUsers' ,getAllUsers);
 router.get('/view/:userId' ,getUserAdminView);
 router.get('/:id' ,getUserInfoById);
-router.put('/:id' ,updateUser)
+router.put('/:id',authenticateToken, isCoachOrAdmin ,updateUser)
 router.delete('/:id',authenticateToken, isAdmin, deleteUser);
 
 export default router;
