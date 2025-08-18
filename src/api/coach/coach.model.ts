@@ -4,9 +4,10 @@ export interface ICoach extends Document{
     name: string;
     phone: string;
     password: string;
-   category: 'کراس فیت' | "پیلاتس"| "فیتنس"| "آمادگی جسمانی"| "ایروبیک";
+   category: 'کراسفیت' | "پیلاتس"| "فیتنس"| "آمادگی جسمانی"| "ایروبیک";
    presence: boolean;
     scheduleId: Types.ObjectId;
+    userId: Types.ObjectId;
 }
 
 const coachSchema: Schema = new Schema({
@@ -15,6 +16,7 @@ const coachSchema: Schema = new Schema({
     password: { type: String, required: true },
     category: { type: String, required: true },
     presence:{ type: Boolean , default : false},
-    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', }
+    scheduleId: { type: Schema.Types.ObjectId, ref: 'ClassSchedule', },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true }
 });
 export default mongoose.model<ICoach>('Coach', coachSchema);
