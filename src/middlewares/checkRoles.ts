@@ -24,7 +24,7 @@ export const isAdmin = async (req:AuthenticatedRequest , res: Response , next: N
     }
 }
 
-export const isCoachOrAdmin = async (req:AuthenticatedRequest , res: Response , next: NextFunction) =>{
+export const isCoach = async (req:AuthenticatedRequest , res: Response , next: NextFunction) =>{
     try {
         const user = await User.findById(req.user?.id);
         if(!user){
@@ -32,7 +32,7 @@ export const isCoachOrAdmin = async (req:AuthenticatedRequest , res: Response , 
             return;
         }
 
-        if(user?.role !== "coach" || "admin"){
+        if(user?.role !== "coach"){
             res.status(403).json({ success: false, message: "Access denied" });
             return;
         }
