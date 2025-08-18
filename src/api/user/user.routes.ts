@@ -1,16 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
 import {getMe ,getAllUsers ,getUserInfoById,getUserAdminView, deleteUser ,updateUser,createUserByAdmin} from "./user.controller";
 import { authenticateToken } from '../../middlewares/auth.middleware';
-import { isAdmin , isCoach } from '../../middlewares/checkRoles';
+import { hasRole } from '../../middlewares/checkRoles';
 
 const router = express.Router();
 
-router.post('/create' ,authenticateToken,isCoach,createUserByAdmin)
+router.post('/create', hasRole("admin") ,createUserByAdmin)
 router.get('/me' , authenticateToken , getMe);
 router.get('/allUsers' ,getAllUsers);
 router.get('/view/:userId' ,getUserAdminView);
 router.get('/:id' ,getUserInfoById);
-router.put('/:id',authenticateToken, isAdmin,isCoach ,updateUser)
-router.delete('/:id',authenticateToken, isAdmin, deleteUser);
+router.put('/:id',authenticateToken, hasRole("admin", "coach") ,updateUser)
+router.delete('/:id', deleteUser);
 
 export default router;
