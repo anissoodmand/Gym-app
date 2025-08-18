@@ -59,3 +59,26 @@ export const sessionAttendance = async(req:Request , res:Response)=>{
       res.status(500).json({success: false, message: "خطا در ثبت حضور مربی" });
   }
 }
+
+export const updateCoach = async(req:Request , res:Response) =>{
+    try {
+      const {id} = req.params;
+       
+        const MyUpdate = req.body;
+        
+        const myCoach = await Coach.findByIdAndUpdate(id , MyUpdate ,{
+            new: true,
+            runValidators: true
+        });
+
+        if(!myCoach){
+            res.status(404).json({message: "Coach not found"})
+            return;
+        }
+        res.status(200).json({message: "Coach update successfully" , data: myCoach})
+        return;
+    } catch (error) {
+         res.status(500).json({ success: false, message: '-خطای سرور' });
+         return
+    }
+}
