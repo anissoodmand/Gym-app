@@ -137,7 +137,6 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
    const enrollments = await ClassEnrollment.find(enrollFilter)
     .populate({ path: 'scheduleId', select: 'title days', model: 'ClassSchedule', strictPopulate: false })
     .populate({ path: "coachId", select: "name", model: "Coach", strictPopulate: false })
-    .populate({ path: "timestamps", select: "createdAt", model: "ClassEnrollment", strictPopulate: false })
       .select("remainingSessions scheduleId coachId createdAt")
       .lean();
 
@@ -145,7 +144,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
       title: (enroll.scheduleId && typeof enroll.scheduleId === 'object' && 'title' in enroll.scheduleId) ? enroll.scheduleId.title : undefined,
       days: (enroll.scheduleId && typeof enroll.scheduleId === 'object' && 'days' in enroll.scheduleId) ? enroll.scheduleId.days : undefined,
       coachName: (enroll.coachId && typeof enroll.coachId === 'object' && 'name' in enroll.coachId) ? enroll.coachId.name : undefined,
-     
+      enrollDate: enroll.createdAt,
       remainingSessions: enroll.remainingSessions,
       
     }));

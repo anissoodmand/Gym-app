@@ -10,6 +10,8 @@ export interface IClassEnrollment extends Document {
   expireTime : Date;
   coachId: Types.ObjectId;
   remainingSessions: number;
+   createdAt: Date;
+  updatedAt: Date;
 }
 
 const ClassEnrollmentSchema = new Schema<IClassEnrollment>(
@@ -22,7 +24,8 @@ const ClassEnrollmentSchema = new Schema<IClassEnrollment>(
     price: { type: Number, required: true },
     expireTime: {type: Date , required: true  },
     coachId: {type: Schema.Types.ObjectId, ref: 'Coach', required: true},
-    remainingSessions: { type: Number, required: true, default: 12 }
+    remainingSessions: { type: Number, required: true, default: 12 },
+    createdAt: {type: Date},
   },
   { timestamps: true }
 );
