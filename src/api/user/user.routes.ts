@@ -5,10 +5,10 @@ import { hasRole } from '../../middlewares/checkRoles';
 
 const router = express.Router();
 
-router.post('/create', hasRole("admin") ,createUserByAdmin)
+router.post('/create',authenticateToken, hasRole("admin") ,createUserByAdmin)
 router.get('/me' , authenticateToken , getMe);
 router.get('/allUsers' ,getAllUsers);
-router.get('/view/:userId' ,getUserAdminView);
+router.get('/view/:userId',authenticateToken, hasRole("admin") ,getUserAdminView);
 router.get('/:id' ,getUserInfoById);
 router.put('/:id',authenticateToken, hasRole("admin", "coach") ,updateUser)
 router.delete('/:id', deleteUser);
