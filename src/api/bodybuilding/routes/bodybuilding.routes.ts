@@ -3,6 +3,6 @@ import{createPackage ,getAllPackages} from '../controllers/bodybuilding.controll
 
 const router = express.Router();
 router.post("/createPackage" , createPackage);
-router.get("allPackages" ,getAllPackages);
+router.get("/allPackages" ,getAllPackages);
 
 export default router;
