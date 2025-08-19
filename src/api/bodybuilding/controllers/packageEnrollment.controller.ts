@@ -5,7 +5,7 @@ import PackageEnrollment from '../model/packageEnrollment.model';
 export const enrollInPackage = async (req: Request, res: Response) => {
     try {
         const {packageId , userId , coachId , startDate , isActive} = req.body;
-        const myPackage = await PackageEnrollment.findById(packageId);
+        const myPackage = await Bodybuilding.findById(packageId);
         if(!myPackage){
             res.status(404).json({ success: false, message:"پکیج یافت نشد"})
             return;
