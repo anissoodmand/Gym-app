@@ -26,8 +26,8 @@ export const getAllPackages = async(req:Request , res:Response) =>{
          res.status(200).json({success: true,total :packages.length , message:"اطلاعات همه پکیج های بدنسازی: " ,packages})
     return;
     } catch (error) {
-             console.error('Error package:', error);
-     res.status(500).json({ success: false, message: '@@@@@@@خطای سرور' });
-     return
+        console.error('Error package:', error);
+        res.status(500).json({ success: false, message: '@@@@@@@خطای سرور' });
+     return;
     }
 }
