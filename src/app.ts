@@ -8,6 +8,7 @@ import enrollRoutes from './api/class/routes/enroll.routes'
 import sessionRoutes from './api/class/routes/session.routes'
 import coachRoutes from './api/coach/coach.routes';
 import bodybuildingRoutes from './api/bodybuilding/routes/bodybuilding.routes';
+import enrollInPackageRoutes from './api/bodybuilding/routes/packageEnrollment.routes';
 import cors from 'cors';
 import { TestModel } from './test';
 import cookieParser from 'cookie-parser';
@@ -44,6 +45,7 @@ app.use('/api/class/enrollment' ,enrollRoutes)
 app.use('/api/class/session' ,sessionRoutes)
 app.use('/api/coach', coachRoutes)
 app.use('/api/bodybuilding' ,bodybuildingRoutes)
+app.use('/api/bodybuilding/enroll' ,enrollInPackageRoutes)
 connectDB();
 
 const PORT = process.env.PORT || 5000;
