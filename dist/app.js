@@ -12,6 +12,7 @@ const classSchedule_routes_1 = __importDefault(require("./api/class/routes/class
 const enroll_routes_1 = __importDefault(require("./api/class/routes/enroll.routes"));
 const session_routes_1 = __importDefault(require("./api/class/routes/session.routes"));
 const coach_routes_1 = __importDefault(require("./api/coach/coach.routes"));
+const bodybuilding_routes_1 = __importDefault(require("./api/bodybuilding/routes/bodybuilding.routes"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
@@ -41,6 +42,7 @@ app.use('/api/class', classSchedule_routes_1.default);
 app.use('/api/class/enrollment', enroll_routes_1.default);
 app.use('/api/class/session', session_routes_1.default);
 app.use('/api/coach', coach_routes_1.default);
+app.use('/api/bodybuilding', bodybuilding_routes_1.default);
 (0, database_1.connectDB)();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 server running on port ${PORT}`));
