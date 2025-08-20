@@ -32,10 +32,10 @@ export const enrollInPackage = async (req: Request, res: Response) => {
 
         const start = startDate ? new Date(startDate) : new Date();
         const expire = new Date(start);
-        expire.setDate(expire.getDate() + packageId.durationDays);
+        expire.setDate(expire.getDate() + myPackage.durationDays);
 
         const newEnroll = await PackageEnrollment.create({
-            packageId, userId , coachId , startDate : start , expireTime: expire , remainingSessions : packageId.sessionCount
+            packageId, userId , coachId , startDate : start , expireTime: expire , remainingSessions : myPackage.sessionCount
         });
         res.status(201).json({success: true , message:"ثبت نام کاربر در این پکیج با موفقیت انجام شد" , newEnroll});
 
