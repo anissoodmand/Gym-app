@@ -3,6 +3,8 @@ import User from "./user.model";
 import { authenticateToken} from '../../middlewares/auth.middleware'
 import bcrypt from 'bcrypt';
 import ClassEnrollment from '../class/model/classEnrollment.model';
+import PackageEnrollment from '../bodybuilding/model/packageEnrollment.model';
+
 import ClassSession from '../class/model/classSession.model';
 import ClassSchedule from '../class/model/classSchedule.model';
 interface AuthenticatedRequest extends Request{
@@ -140,17 +142,29 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
       .select("remainingSessions scheduleId coachId createdAt")
       .lean();
 
+      const packageEnroll = await PackageEnrollment.find(enrollFilter)
+        .populate({ path: "packageId", select: "packageName", model: "PackageEnrollment", strictPopulate: false })
+        .populate({ path: "coachId", select: "name", model: "Coach", strictPopulate: false })
+          .select("remainingSessions packageId coachId startDate")
+          .lean();
+    
       const result = enrollments.map(enroll => ({
       title: (enroll.scheduleId && typeof enroll.scheduleId === 'object' && 'title' in enroll.scheduleId) ? enroll.scheduleId.title : undefined,
       days: (enroll.scheduleId && typeof enroll.scheduleId === 'object' && 'days' in enroll.scheduleId) ? enroll.scheduleId.days : undefined,
       coachName: (enroll.coachId && typeof enroll.coachId === 'object' && 'name' in enroll.coachId) ? enroll.coachId.name : undefined,
       enrollDate: enroll.createdAt,
       remainingSessions: enroll.remainingSessions,
-      
+    }));
+
+    const packageResult = packageEnroll.map(pEnroll => ({
+      package_Name:(pEnroll.packageId && typeof pEnroll.packageId === 'object' && 'packageName' in pEnroll.packageId) ? pEnroll.packageId.packageName : undefined,
+      coach_name: (pEnroll.coachId && typeof pEnroll.coachId === 'object' && 'name' in pEnroll.coachId) ? pEnroll.coachId.name : undefined,
+      startDate : pEnroll.startDate,
+      remainingSessions: pEnroll.remainingSessions,
     }));
 
   
-    res.status(200).json({success: true , user , result })
+    res.status(200).json({success: true , user , result ,packageResult})
    } catch (error) {
     console.error("Error getUserAdminView:", error);
      res.status(500).json({ success: false, message: "خطا در دریافت اطلاعات کلاس‌ها" })
