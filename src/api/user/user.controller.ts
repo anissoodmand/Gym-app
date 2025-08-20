@@ -143,7 +143,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
       .lean();
 
       const packageEnroll = await PackageEnrollment.find(enrollFilter)
-        .populate({ path: "packageId", select: "packageName", model: "PackageEnrollment", strictPopulate: false })
+        .populate({ path: "packageId", select: "packageName", model: "Bodybuilding", strictPopulate: false })
         .populate({ path: "coachId", select: "name", model: "Coach", strictPopulate: false })
           .select("remainingSessions packageId coachId startDate")
           .lean();
