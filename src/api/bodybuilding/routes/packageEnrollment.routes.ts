@@ -3,6 +3,6 @@ import {enrollInPackage ,useOneSession} from "../controllers/packageEnrollment.c
 
 const router = express.Router();
 router.post("/" ,enrollInPackage);
-router.post("/useOne/:id",useOneSession);
+router.post("/:id/use-session",useOneSession);
 
 export default router;
