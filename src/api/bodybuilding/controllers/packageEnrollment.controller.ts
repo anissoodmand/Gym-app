@@ -52,9 +52,9 @@ export const useOneSession = async( req:Request , res:Response) =>{
         const {enrollmentId} = req.params;
         const now = new Date();
         const updateSession = await PackageEnrollment.findByIdAndUpdate(
-            {_id: enrollmentId , expireTime : {$gt : now}, remainingSessions:{ $gt: 0 }},
-            {$inc: {remainingSessions : -1}},
-            {new: true}
+            { _id: enrollmentId, expireTime: { $gt: now }, remainingSessions: { $gt: 0 } },
+            { $inc: { remainingSessions: -1 } },
+            { new: true }
         ).populate("userId coachId packageId", "name packageName");
          if (updateSession) {
       // مرحله 2: ثبت در هیستوری
