@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Bodybuilding from '../model/bodybuilding.model';
 import PackageEnrollment from '../model/packageEnrollment.model';
+import SessionHistory from '../model/sessionHistory.model';
 
 export const enrollInPackage = async (req: Request, res: Response) => {
     try {
@@ -41,6 +42,55 @@ export const enrollInPackage = async (req: Request, res: Response) => {
 
     } catch (error) {
     console.error('Error enroll in package:', error);
+     res.status(500).json({ success: false, message: 'خطای سرور رخ داده است' });
+     return;
+    }
+}
+
+export const useOneSession = async( req:Request , res:Response) =>{
+    try {
+        const {enrollmentId} = req.params;
+        const now = new Date();
+        const updateSession = await PackageEnrollment.findByIdAndUpdate(
+            {_id: enrollmentId , expireTime : {$gt : now}, remainingSessions:{ $gt: 0 }},
+            {$inc: {remainingSessions : -1}},
+            {new: true}
+        ).populate("userId coachId packageId", "name packageName");
+         if (updateSession) {
+      // مرحله 2: ثبت در هیستوری
+        await SessionHistory.create({
+            enrollmentId: updateSession._id,
+            userId: updateSession.userId,
+            coachId: updateSession.coachId,
+            packageId: updateSession.packageId,
+            usedAt: now,
+      });
+        res.status(200).json({
+        success: true,
+        message: "جلسه با موفقیت ثبت شد",
+        data: {
+          remainingSessions: updateSession.remainingSessions,
+          expireTime: updateSession.expireTime,
+        }
+      });
+       const enrollment = await PackageEnrollment.findById(enrollmentId).select("expireTime remainingSessions");
+
+    if (!enrollment) {
+       res.status(404).json({ message: "اشتراک پیدا نشد" });
+       return
+    }
+
+    if (enrollment.expireTime <= now) {
+       res.status(400).json({ message: "اشتراک منقضی شده است" });
+       return
+    }
+
+    if (enrollment.remainingSessions <= 0) {
+       res.status(405).json({ message: "هیچ جلسه‌ای باقی نمانده است" });
+       return
+    }}
+    } catch (error) {
+     console.error('Error: use one session:', error);
      res.status(500).json({ success: false, message: 'خطای سرور رخ داده است' });
      return;
     }
