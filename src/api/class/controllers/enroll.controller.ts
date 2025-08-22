@@ -124,7 +124,6 @@ export const enrollUserMonthly = async (req: Request, res: Response): Promise<vo
   }
 };
 
-
 export const cancelUserMonthlyEnrollment = async (req: Request, res: Response) => {
   try {
     const { scheduleId, userId } = req.body;
@@ -163,3 +162,22 @@ export const cancelUserMonthlyEnrollment = async (req: Request, res: Response) =
     res.status(500).json({ success: false, message: 'خطای سرور در لغو ثبت‌نام' });
   }
 };
+
+export const classUsers = async (req:Request , res:Response) =>{
+try {
+  const {scheduleId} = req.params;
+  const schedule = await ClassSchedule.findById(scheduleId);
+  if(!schedule){
+    res.status(404).json({success: false , message: "کلاسی با این آیدی یافت نشد"});
+    return;
+  }
+ const activeEnrollment = await ClassEnrollment.find(
+  {scheduleId, expireTime:{$gt :new Date()}},
+).populate("userId" , "name");
+res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", activeEnrollment});
+return;
+} catch (error) {
+    console.error('Error in get Active users :', error);
+    res.status(500).json({ success: false, message: 'خطای سرور' });
+}
+}
