@@ -169,13 +169,16 @@ try {
 
  const activeEnrollment = await ClassEnrollment.find(
   {scheduleId, expireTime:{$gt :new Date()}
-}).populate("userId" , "name remainingSessions");
-
+}).populate("userId" , "name").select("remainingSessions userId")
+ 
   if(!activeEnrollment){
     res.status(404).json({success: false , message: "کاربر فعالی برای این کلاس یافت نشد"});
     return;
   }
-  const users = activeEnrollment.map((enroll)=> enroll.userId);
+  const users = activeEnrollment.map((enroll)=> ({
+    name : enroll.userId,
+     remainingSessions: enroll.remainingSessions
+  }));
 res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", users});
 return;
 } catch (error) {
