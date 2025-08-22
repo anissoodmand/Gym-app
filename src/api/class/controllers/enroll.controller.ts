@@ -166,15 +166,17 @@ export const cancelUserMonthlyEnrollment = async (req: Request, res: Response) =
 export const classUsers = async (req:Request , res:Response) =>{
 try {
   const {scheduleId} = req.params;
-  const schedule = await ClassSchedule.findById(scheduleId);
-  if(!schedule){
-    res.status(404).json({success: false , message: "کلاسی با این آیدی یافت نشد"});
+
+ const activeEnrollment = await ClassEnrollment.find(
+  {scheduleId, expireTime:{$gt :new Date()}
+}).populate("userId" , "name remainingSessions");
+
+  if(!activeEnrollment){
+    res.status(404).json({success: false , message: "کاربر فعالی برای این کلاس یافت نشد"});
     return;
   }
- const activeEnrollment = await ClassEnrollment.find(
-  {scheduleId, expireTime:{$gt :new Date()}},
-).populate("userId" , "name");
-res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", activeEnrollment});
+  const users = activeEnrollment.map((enroll)=> enroll.userId);
+res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", users});
 return;
 } catch (error) {
     console.error('Error in get Active users :', error);
