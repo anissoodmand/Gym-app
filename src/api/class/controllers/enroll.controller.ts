@@ -177,9 +177,8 @@ try {
     return;
   }
   const users = activeEnrollment.map((enroll)=> ({
-    name : enroll.userId,
-    phone : enroll.userId,
-    status : enroll.userId,
+  userDetails : enroll.userId,
+
      remainingSessions: enroll.remainingSessions
   }));
 res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", users});
