@@ -5,6 +5,7 @@ import ClassSchedule from '../model/classSchedule.model';
 import { checkCapacityForSessions } from '../services/classCapacity.service';
 import moment from 'moment-jalaali';
 import Coach from '../../coach/coach.model';
+import { start } from 'repl';
 
 export const enrollInClass = async(req:Request , res:Response): Promise<void> =>{
     try {
@@ -169,7 +170,7 @@ try {
 
  const activeEnrollment = await ClassEnrollment.find(
   {scheduleId, expireTime:{$gt :new Date()}
-}).populate("userId" , "name").select("remainingSessions userId")
+}).populate("userId" , "name phone status").select("remainingSessions userId")
  
   if(!activeEnrollment){
     res.status(404).json({success: false , message: "کاربر فعالی برای این کلاس یافت نشد"});
@@ -177,6 +178,8 @@ try {
   }
   const users = activeEnrollment.map((enroll)=> ({
     name : enroll.userId,
+    phone : enroll.userId,
+    status : enroll.userId,
      remainingSessions: enroll.remainingSessions
   }));
 res.status(200).json({success: true, message: "لیست همه ی کاربران فعال این کلاس : ", users});
