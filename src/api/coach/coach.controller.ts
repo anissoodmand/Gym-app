@@ -4,6 +4,7 @@ import Coach from './coach.model';
 import ClassSession from '../class/model/classSession.model';
 import CoachAttendance from './CoachAttendance.model';
 import ClassEnrollment from '../class/model/classEnrollment.model';
+import ClassSchedule from '../class/model/classSchedule.model';
 
 export const createCoach = async (req:Request , res:Response) =>{
 try {
@@ -32,7 +33,24 @@ try {
    res.status(500).json({ success: false, message: 'خطای داخلی سرور' });
 }
 }
-
+export const session2Attendance = async(req:Request , res:Response)=>{
+try {
+  const {scheduleId , coachId} = req.body;
+  const classSessions = await ClassSession.find(scheduleId);
+  if(!classSessions){
+     res.status(404).json({ success: false, message:"جلسه یافت نشد"})
+      return;
+  }
+    await ClassEnrollment.updateMany(                         //2
+      { scheduleId: classSessions[0]?.scheduleId , remainingSessions: { $gt: 0 } },
+      { $inc: { remainingSessions: -1 } }
+    );
+      res.status(200).json({success:true, message: "حضور مربی با موفقیت ثبت شد و از تمامی کاربران این کلاس یک جلسه کسر شد"})
+} catch (error) {
+      console.error('Error CoachAttendance :', error);
+      res.status(500).json({success: false, message: "خطا در ثبت حضور مربی" });
+}
+}
 export const sessionAttendance = async(req:Request , res:Response)=>{
   try {
     const {sessionId , coachId} = req.body;
