@@ -125,14 +125,15 @@ export const sessionAttendance = async (req: Request, res: Response) => {
 
       // ثبت حضور مربی
       await CoachAttendance.create({ sessionId: session._id, coachId });
+      processedSessions++;
+    }
 
-      // کم کردن یک جلسه از همه‌ی کاربران ثبت‌نامی این کلاس
+    // ✅ فقط یک بار از همه کاربران یک جلسه کم کن
+    if (processedSessions > 0) {
       await ClassEnrollment.updateMany(
         { scheduleId, remainingSessions: { $gt: 0 } },
         { $inc: { remainingSessions: -1 } }
       );
-
-      processedSessions++;
     }
 
     res.status(200).json({
@@ -144,3 +145,4 @@ export const sessionAttendance = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "خطا در ثبت حضور مربی" });
   }
 };
+
