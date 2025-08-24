@@ -85,45 +85,45 @@ export const enrollInClass = async(req:Request , res:Response): Promise<void> =>
     }
 }
 
-export const enrollUserMonthly = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { scheduleId, userId } = req.body;
+// export const enrollUserMonthly = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const { scheduleId, userId } = req.body;
 
-    const schedule = await ClassSchedule.findById(scheduleId);
-    if (!schedule) {
-       res.status(404).json({ success: false, message: 'برنامه کلاس یافت نشد' });
-       return
-    }
+//     const schedule = await ClassSchedule.findById(scheduleId);
+//     if (!schedule) {
+//        res.status(404).json({ success: false, message: 'برنامه کلاس یافت نشد' });
+//        return
+//     }
 
-    const today = moment().format('YYYY-MM-DD');
+//     const today = moment().format('YYYY-MM-DD');
 
-    const sessions = await ClassSession.find({
-      scheduleId,
-      date: { $gte: today },
-      isCanceled: false,
-    });
+//     const sessions = await ClassSession.find({
+//       scheduleId,
+//       date: { $gte: today },
+//       isCanceled: false,
+//     });
 
-    let enrolledCount = 0;
-    for (const session of sessions) {
-      if (
-        session.registeredUsers.length < schedule.capacity &&
-        !session.registeredUsers.includes(userId)
-      ) {
-        session.registeredUsers.push(userId);
-        await session.save();
-        enrolledCount++;
-      }
-    }
+//     let enrolledCount = 0;
+//     for (const session of sessions) {
+//       if (
+//         session.registeredUsers.length < schedule.capacity &&
+//         !session.registeredUsers.includes(userId)
+//       ) {
+//         session.registeredUsers.push(userId);
+//         await session.save();
+//         enrolledCount++;
+//       }
+//     }
 
-    res.status(200).json({
-      success: true,
-      message: `${enrolledCount} جلسه برای کاربر ثبت شد.`,
-    });
-  } catch (error) {
-    console.error('خطا در ثبت نام ماهانه:', error);
-    res.status(500).json({ success: false, message: 'خطای سرور در ثبت‌نام' });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       message: `${enrolledCount} جلسه برای کاربر ثبت شد.`,
+//     });
+//   } catch (error) {
+//     console.error('خطا در ثبت نام ماهانه:', error);
+//     res.status(500).json({ success: false, message: 'خطای سرور در ثبت‌نام' });
+//   }
+// };
 
 export const cancelUserMonthlyEnrollment = async (req: Request, res: Response) => {
   try {
