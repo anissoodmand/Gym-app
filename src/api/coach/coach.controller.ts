@@ -51,22 +51,22 @@ try {
       res.status(500).json({success: false, message: "خطا در ثبت حضور مربی" });
 }
 }
-export const sessionAttendance = async(req:Request , res:Response)=>{
+export const session1Attendance = async(req:Request , res:Response)=>{
   try {
-    const {sessionId , coachId} = req.body;
+    const {scheduleId , coachId} = req.body;
    
-    const mySession = await ClassSession.findById(sessionId);
+    const mySession = await ClassSession.findById(scheduleId);
     if(!mySession){
       res.status(404).json({ success: false, message:"جلسه یافت نشد"})
       return;
     }
-    const exist = await CoachAttendance.findOne({sessionId});
+    const exist = await CoachAttendance.findOne({ sessionId: mySession._id });
     if(exist){
       res.status(400).json({success: false, message: "حضور مربی قبلاً ثبت شده"});
       return
     }
-    await CoachAttendance.create({ sessionId, coachId });    //1
-    await ClassEnrollment.updateMany(                         //2
+    await CoachAttendance.create({ sessionId: mySession._id , coachId });   
+    await ClassEnrollment.updateMany(                         
       { scheduleId: mySession.scheduleId , remainingSessions: { $gt: 0 } },
       { $inc: { remainingSessions: -1 } }
     );
@@ -100,3 +100,47 @@ export const updateCoach = async(req:Request , res:Response) =>{
          return
     }
 }
+export const sessionAttendance = async (req: Request, res: Response) => {
+  try {
+    const { scheduleId, coachId } = req.body;
+
+    // تمام جلسات مربوط به این برنامه
+    const sessions = await ClassSession.find({ scheduleId });
+
+    if (!sessions || sessions.length === 0) {
+      res.status(404).json({ success: false, message: "هیچ جلسه‌ای برای این برنامه یافت نشد" });
+      return;
+    }
+
+    let processedSessions = 0;
+    let skippedSessions = 0;
+
+    for (const session of sessions) {
+      // آیا قبلاً حضور برای این جلسه ثبت شده؟
+      const exist = await CoachAttendance.findOne({ sessionId: session._id });
+      if (exist) {
+        skippedSessions++;
+        continue; // برو جلسه بعدی
+      }
+
+      // ثبت حضور مربی
+      await CoachAttendance.create({ sessionId: session._id, coachId });
+
+      // کم کردن یک جلسه از همه‌ی کاربران ثبت‌نامی این کلاس
+      await ClassEnrollment.updateMany(
+        { scheduleId, remainingSessions: { $gt: 0 } },
+        { $inc: { remainingSessions: -1 } }
+      );
+
+      processedSessions++;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `پردازش انجام شد: ${processedSessions} جلسه ثبت شد، ${skippedSessions} جلسه از قبل ثبت شده بود.`
+    });
+  } catch (error) {
+    console.error("Error CoachAttendance:", error);
+    res.status(500).json({ success: false, message: "خطا در ثبت حضور مربی" });
+  }
+};

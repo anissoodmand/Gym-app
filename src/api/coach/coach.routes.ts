@@ -3,7 +3,7 @@ import{createCoach ,sessionAttendance,session2Attendance ,updateCoach} from './c
 
 const router = express.Router();
 router.post('/createCoach' , createCoach);
-router.post('/attendance', session2Attendance);
+router.post('/attendance', sessionAttendance);
 router.put("/:id" ,updateCoach)
 
 export default router;
