@@ -51,6 +51,7 @@ try {
       res.status(500).json({success: false, message: "خطا در ثبت حضور مربی" });
 }
 }
+//اصلی
 export const session1Attendance = async(req:Request , res:Response)=>{
   try {
     const {scheduleId , coachId} = req.body;
