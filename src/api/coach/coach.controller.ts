@@ -105,45 +105,46 @@ export const sessionAttendance = async (req: Request, res: Response) => {
   try {
     const { scheduleId, coachId } = req.body;
 
-    // تمام جلسات مربوط به این برنامه
-    const sessions = await ClassSession.find({ scheduleId });
+    // پیدا کردن جلسه‌های این برنامه
+    const sessions = await ClassSession.find({ scheduleId }).sort({ date: 1 }); // مرتب بر اساس تاریخ
 
     if (!sessions || sessions.length === 0) {
       res.status(404).json({ success: false, message: "هیچ جلسه‌ای برای این برنامه یافت نشد" });
       return;
     }
 
-    let processedSessions = 0;
-    let skippedSessions = 0;
-
+    // پیدا کردن اولین جلسه‌ای که هنوز حضور ثبت نشده
+    let targetSession = null;
     for (const session of sessions) {
-      // آیا قبلاً حضور برای این جلسه ثبت شده؟
       const exist = await CoachAttendance.findOne({ sessionId: session._id });
-      if (exist) {
-        skippedSessions++;
-        continue; // برو جلسه بعدی
+      if (!exist) {
+        targetSession = session;
+        break;
       }
-
-      // ثبت حضور مربی
-      await CoachAttendance.create({ sessionId: session._id, coachId });
-      processedSessions++;
     }
 
-    // ✅ فقط یک بار از همه کاربران یک جلسه کم کن
-    if (processedSessions > 0) {
-      await ClassEnrollment.updateMany(
-        { scheduleId, remainingSessions: { $gt: 0 } },
-        { $inc: { remainingSessions: -1 } }
-      );
+    if (!targetSession) {
+      res.status(400).json({ success: false, message: "برای تمام جلسات این برنامه حضور مربی قبلاً ثبت شده" });
+      return;
     }
+
+    // ثبت حضور برای همون جلسه
+    await CoachAttendance.create({ sessionId: targetSession._id, coachId });
+
+    // یک جلسه از همه‌ی کاربرانی که در این کلاس ثبت‌نام کرده‌اند کم کن
+    await ClassEnrollment.updateMany(
+      { scheduleId, remainingSessions: { $gt: 0 } },
+      { $inc: { remainingSessions: -1 } }
+    );
 
     res.status(200).json({
       success: true,
-      message: `پردازش انجام شد: ${processedSessions} جلسه ثبت شد، ${skippedSessions} جلسه از قبل ثبت شده بود.`
+      message: `حضور مربی برای جلسه ${targetSession._id} ثبت شد و یک جلسه از کاربران کم گردید`
     });
   } catch (error) {
     console.error("Error CoachAttendance:", error);
     res.status(500).json({ success: false, message: "خطا در ثبت حضور مربی" });
   }
 };
+
 
