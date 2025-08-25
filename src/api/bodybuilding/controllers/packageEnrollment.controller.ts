@@ -95,3 +95,21 @@ export const useOneSession = async( req:Request , res:Response) =>{
      return;
     }
 }
+
+export const getAllPackageEnrollments = async(req:Request , res:Response) =>{
+    try {
+        const now = new Date();
+        const allPackage = await PackageEnrollment.find(
+            {expireTime: { $gt: now }, remainingSessions: { $gt: 0 } });
+             if(!allPackage){
+      res.status(404).json({success: false, message: "هیچ ثبت نام فعالی یافت نشد"})
+      return;
+    }
+    res.status(200).json({success: true,total :allPackage.length , message:"اطلاعات همه پکیج های فعال ثبت نام: " ,allPackage})
+    return;
+    } catch (error) {
+    console.error('Error: get All Package Enrollments:', error);
+     res.status(500).json({ success: false, message: 'خطای سرور رخ داده است' });
+     return;
+    }
+}

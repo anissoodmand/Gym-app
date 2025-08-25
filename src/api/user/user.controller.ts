@@ -145,7 +145,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
       const packageEnroll = await PackageEnrollment.find(enrollFilter)
         .populate({ path: "packageId", select: "packageName", model: "Bodybuilding", strictPopulate: false })
         .populate({ path: "coachId", select: "name", model: "Coach", strictPopulate: false })
-          .select("remainingSessions packageId coachId startDate")
+          .select("_id remainingSessions packageId coachId startDate")
           .lean();
     
       const result = enrollments.map(enroll => ({
@@ -157,6 +157,7 @@ export const getUserAdminView = async (req: Request, res: Response) =>{
     }));
 
     const packageResult = packageEnroll.map(pEnroll => ({
+      enrollmentId: pEnroll._id,
       package_Name:(pEnroll.packageId && typeof pEnroll.packageId === 'object' && 'packageName' in pEnroll.packageId) ? pEnroll.packageId.packageName : undefined,
       coach_name: (pEnroll.coachId && typeof pEnroll.coachId === 'object' && 'name' in pEnroll.coachId) ? pEnroll.coachId.name : undefined,
       startDate : pEnroll.startDate,
